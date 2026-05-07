@@ -4,10 +4,16 @@ import { io } from "socket.io-client"
 function App() {
   const [socket, setSocket] = useState()
   const [inputMessage, setInputMessage] = useState()
+  const [mensajesRecibidos, setMensajeRecibido] = useState([])
 
   useEffect( () => {
     const newSocket = io("localhost:3000")
     setSocket(newSocket)
+
+    newSocket.on("message", (message) => {
+      setMensajeRecibido(message)
+    })
+
     return () => {
       newSocket.disconnect()
     }
@@ -28,6 +34,11 @@ function App() {
         />
         <button type="submit">Enviar</button>
       </form>
+      <ul>
+        {
+          mensajesRecibidos.map(mensaje => <li>{mensaje}</li>)
+        }
+      </ul>
     </div>
   )
 }

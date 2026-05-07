@@ -12,14 +12,16 @@ const io = new Server(server, {
   }
 })
 
+const mensajes = []
 io.on("connection", (socket) => {
   console.log("usuario conectado")
 
-  socket.emit("message", "holi")
+  socket.emit("message", ["holi"])
 
-  socket.on("msg", (msg) => {
+  socket.on("message", (message) => {
+    mensajes.push(message)
     socket.emit("confirmation", "mensaje enviado")
-    socket.broadcast.emit("message", "enviaron esto" + msg)
+    socket.broadcast.emit("message", mensajes)
   })
 })
 
