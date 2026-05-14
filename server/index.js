@@ -16,12 +16,21 @@ const mensajes = []
 io.on("connection", (socket) => {
   console.log("usuario conectado")
 
-  socket.emit("message", ["holi"])
+  socket.emit("message", mensajes)
 
   socket.on("message", (message) => {
-    mensajes.push(message)
+
+    const hora = new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit"
+    })
+    const nuevoMensaje = {
+      ...message,
+      hora
+    }
+    mensajes.push(nuevoMensaje)
     socket.emit("confirmation", "mensaje enviado")
-    socket.broadcast.emit("message", mensajes)
+    io.emit("message", mensajes)
   })
 })
 
